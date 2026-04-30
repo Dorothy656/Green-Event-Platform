@@ -1,0 +1,157 @@
+{% extends "loggedin_base.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- Header Section -->
+  <div class="card card-wide">
+    <h2 class="page-heading text-center">📋 System Logs</h2>
+    <p class="text-gray text-center">View and filter system logs (admin only).</p>
+  </div>
+
+  <!-- Filter and Search Form -->
+  <div class="card mt-2">
+    <form method="GET" class="form-inline justify-content-center p-2 flex-wrap">
+      <!-- Log Level Filter -->
+      <div class="form-group mr-2 mb-2">
+        <label for="level" class="mr-2">Level:</label>
+        <select name="level" id="level" class="form-control">
+          <option value="all" selected="{{ log_level == 'all' }}">All Levels</option>
+          <option value="info" selected="{{ log_level == 'info' }}">INFO</option>
+          <option value="warning" selected="{{ log_level == 'warning' }}">WARNING</option>
+          <option value="error" selected="{{ log_level == 'error' }}">ERROR</option>
+          <option value="critical" selected="{{ log_level == 'critical' }}">CRITICAL</option>
+        </select>
+      </div>
+
+      <!-- Keyword Search -->
+      <div class="form-group mr-2 mb-2">
+        <label for="search" class="mr-2">Search:</label>
+        <input type="text" name="search" id="search" class="form-control"
+               placeholder="Search logs..." value="{{ search_query }}">
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-blue mb-2">Filter</button>
+    </form>
+  </div>
+
+  <!-- Logs Display -->
+  <div class="card mt-2">
+    <div class="logs-container">
+      {% if logs %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Level</th>
+                <th>Name</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for log in logs %}
+                <tr class="log-entry {% if log.level == 'ERROR' or log.level == 'CRITICAL' %}table-danger{% elif log.level == 'WARNING' %}table-warning{% elif log.level == 'INFO' %}table-success{% endif %}">
+                  <td>
+                    {% if log.time %}
+                      {{ log.time.strftime('%Y-%m-%d %H:%M:%S') }}
+                    {% else %}
+                      N/A
+                    {% endif %}
+                  </td>
+                  <td>
+                    <span class="badge {% if log.level == 'ERROR' or log.level == 'CRITICAL' %}badge-danger{% elif log.level == 'WARNING' %}badge-warning{% elif log.level == 'INFO' %}badge-success{% else %}badge-secondary{% endif %}">
+                      {{ log.level }}
+                    </span>
+                  </td>
+                  <td>{{ log.name }}</td>
+                  <td>{{ log.message }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="text-gray text-center p-3">No logs found.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  {% if total_pages > 1 %}
+    <div class="card mt-2">
+      <div class="pagination-container">
+        <nav aria-label="Log pagination">
+          <ul class="pagination justify-content-center">
+            <!-- Previous Page -->
+            <li class="page-item {% if page == 1 %}disabled{% endif %}">
+              <a class="page-link" href="{{ url_for('admin_logs', page=page-1, level=log_level, search=search_query) }}">
+                Previous
+              </a>
+            </li>
+
+            <!-- Page Numbers -->
+            {% for p in range(1, total_pages + 1) %}
+              <!-- Only show first, last, and current page +- 2 -->
+              {% if p == 1 or p == total_pages or (p >= page - 2 and p <= page + 2) %}
+                <li class="page-item {% if p == page %}active{% endif %}">
+                  <a class="page-link" href="{{ url_for('admin_logs', page=p, level=log_level, search=search_query) }}">
+                    {{ p }}
+                  </a>
+                </li>
+              {% elif p == page - 3 or p == page + 3 %}
+                <li class="page-item disabled">
+                  <span class="page-link">...</span>
+                </li>
+              {% endif %}
+            {% endfor %}
+
+            <!-- Next Page -->
+            <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+              <a class="page-link" href="{{ url_for('admin_logs', page=page+1, level=log_level, search=search_query) }}">
+                Next
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Back to Dashboard -->
+  <div class="text-center mt-2">
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-dark w-50">← Back to Dashboard</a>
+  </div>
+</div>
+
+<!-- CSS for logs -->
+<style>
+  .logs-container {
+    max-height: 600px;
+    overflow-y: auto;
+  }
+
+  .log-entry:hover {
+    background-color: #f8f9fa;
+  }
+
+  .pagination-container {
+    padding: 15px;
+  }
+</style>
+
+<!-- JavaScript Enhancements -->
+<script>
+  // Focus on search input when page loads
+  document.getElementById('search').focus();
+
+  // Clear filters button functionality
+  document.getElementById('clearFilters').addEventListener('click', function() {
+    document.getElementById('level').value = 'all';
+    document.getElementById('search').value = '';
+    document.querySelector('form').submit();
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "loggedin_base.html" %}
+{% block title %}Feedback - {{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- Header Section -->
+  <div class="card card-wide">
+    <h2 class="page-heading">📝 Volunteer Feedback for {{ event.title }}</h2>
+    <p><b>Date:</b> {{ event.date.strftime('%Y-%m-%d') }}</p>
+    <p><b>Location:</b> {{ event.location }}</p>
+  </div>
+
+  <!-- 🔍 Search Bar -->
+  <div class="card mt-2 text-center" style="padding: 1rem;">
+    <form method="get" action="{{ url_for('view_feedback', event_id=event.id) }}" class="inline-form">
+      <input
+        type="text"
+        name="search"
+        placeholder="Search by volunteer name or comment..."
+        value="{{ search_query or '' }}"
+        class="input-field"
+        style="padding: 0.5rem; width: 320px; border: 1px solid #ccc; border-radius: 6px; margin-right: 0.5rem;">
+      <button type="submit" class="btn btn-blue btn-sm">Search</button>
+      {% if search_query %}
+        <a href="{{ url_for('view_feedback', event_id=event.id) }}" class="btn btn-gray btn-sm">Clear</a>
+      {% endif %}
+    </form>
+  </div>
+
+  <!-- Back Button -->
+  <div class="text-center mt-2">
+    <a href="{{ url_for('manage_event', event_id=event.id) }}" class="btn btn-blue">⬅ Back to Management</a>
+  </div>
+
+  <!-- Feedback Details -->
+  <div class="card mt-2">
+    <div class="card-title purple">💬 Feedback Details</div>
+    {% if feedbacks %}
+    <div id="feedbackContainer" class="mt-1">
+      {% for f in feedbacks %}
+      <div class="card card-info mb-1 feedback-item">
+        <p><b>{{ f.user.username }}</b> rated <b class="text-warning">{{ f.rating }}/5</b></p>
+        <p class="text-gray">“{{ f.comment }}”</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-gray text-center mt-1">
+      {% if search_query %}
+        No feedback found matching "{{ search_query }}".
+      {% else %}
+        No feedback available yet.
+      {% endif %}
+    </p>
+    {% endif %}
+  </div>
+
+  <!-- Back to Top Button -->
+  <div class="text-center mt-2">
+    <button id="scrollTopBtn" class="btn btn-dark w-50">↑ Back to Top</button>
+  </div>
+</div>
+
+<!-- JavaScript Enhancements -->
+<script>
+  // Smooth scroll to top
+  const scrollBtn = document.getElementById('scrollTopBtn');
+  if (scrollBtn) {
+    scrollBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // Fade-in animation for feedback cards
+  const feedbackItems = document.querySelectorAll('.feedback-item');
+  feedbackItems.forEach((item, i) => {
+    item.style.opacity = 0;
+    setTimeout(() => {
+      item.style.transition = 'opacity 0.4s ease';
+      item.style.opacity = 1;
+    }, 150 * i);
+  });
+
+  // Autofocus search
+  const searchInput = document.querySelector('input[name="search"]');
+  if (searchInput && "{{ search_query }}") searchInput.focus();
+</script>
+{% endblock %}

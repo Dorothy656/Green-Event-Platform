@@ -1,0 +1,97 @@
+{% extends "loggedin_base.html" %}
+{% block title %}Feedback - Green Event Platform{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="card card-wide">
+    <h2 class="page-heading text-center">💬 Leave Feedback</h2>
+    <p class="text-center text-muted mb-2">
+      Share your experience from this event to help improve future ones.
+    </p>
+
+    <form method="POST" action="" novalidate class="form-styled" id="feedbackForm">
+      {{ form.hidden_tag() }}
+
+      <!-- Rating -->
+      <div class="form-group">
+        {{ form.rating.label(class_="form-label") }}
+        {{ form.rating(class_="form-control", id="ratingInput", min="1", max="5", placeholder="Enter a number 1–5") }}
+        {% for error in form.rating.errors %}
+          <span class="error-text">[{{ error }}]</span>
+        {% endfor %}
+      </div>
+
+      <!-- Comment -->
+      <div class="form-group">
+        {{ form.comment.label(class_="form-label") }}
+        {{ form.comment(class_="form-control form-textarea", id="commentInput") }}
+        {% for error in form.comment.errors %}
+          <span class="error-text">[{{ error }}]</span>
+        {% endfor %}
+      </div>
+
+      <!-- Submit Button -->
+      <div class="text-center mt-2">
+        {{ form.submit(class_="btn btn-green w-80") }}
+      </div>
+    </form>
+
+    <div class="text-center mt-1">
+      <a href="{{ url_for('index') }}" class="btn btn-dark">← Back to Home</a>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript Enhancements -->
+<script>
+  // Form validation feedback (including 1–5 rating check)
+  document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+    const ratingInput = document.getElementById('ratingInput');
+    const commentInput = document.getElementById('commentInput');
+    const ratingVal = parseInt(ratingInput.value.trim());
+    const comment = commentInput.value.trim();
+    let valid = true;
+
+    // reset classes
+    ratingInput.classList.remove('input-error', 'input-valid');
+    commentInput.classList.remove('input-error', 'input-valid');
+
+    // check rating validity
+    if (isNaN(ratingVal) || ratingVal < 1 || ratingVal > 5) {
+      e.preventDefault();
+      ratingInput.classList.add('input-error');
+      valid = false;
+    } else {
+      ratingInput.classList.add('input-valid');
+    }
+
+    // check comment length
+    if (comment.length < 5) {
+      e.preventDefault();
+      commentInput.classList.add('input-error');
+      valid = false;
+    } else {
+      commentInput.classList.add('input-valid');
+    }
+
+    // success feedback UI
+    if (valid) {
+      const btn = this.querySelector('.btn-green');
+      btn.textContent = 'Submitting...';
+      btn.disabled = true;
+    }
+  });
+
+  // Live feedback for rating input (green glow when valid)
+  const ratingField = document.getElementById('ratingInput');
+  ratingField.addEventListener('input', function() {
+    const val = parseInt(this.value.trim());
+    this.classList.remove('input-error', 'input-valid');
+    if (!isNaN(val) && val >= 1 && val <= 5) {
+      this.classList.add('input-valid');
+    } else if (this.value.trim() !== '') {
+      this.classList.add('input-error');
+    }
+  });
+</script>
+{% endblock %}

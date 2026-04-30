@@ -1,0 +1,99 @@
+{% extends "loggedin_base.html" %}
+{% block title %}Update Results - {{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- Header Section -->
+  <div class="card card-wide">
+    <h2 class="page-heading">📊 Update Event Results</h2>
+    <p><b>Event:</b> {{ event.title }}</p>
+    <p><b>Date:</b> {{ event.date.strftime('%Y-%m-%d') }}</p>
+    <p><b>Location:</b> {{ event.location }}</p>
+  </div>
+
+  <!-- Participant Hours Update Section -->
+  <div class="card mt-2">
+    <div class="card-title">Participants Hours Update</div>
+    {% if participants %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Current Hours</th>
+          <th>New Hours</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in participants %}
+        <tr>
+          <td>{{ p.user.username }}</td>
+          <td>{{ "%.1f"|format(p.hours) }} hrs</td>
+          <td>
+            <form method="POST" style="display:flex; gap:6px; align-items:center;">
+              <input type="hidden" name="update_hours_userid" value="{{ p.user.id }}">
+              <input type="number" step="0.1" name="new_hours" class="form-control" placeholder="Enter new hours" required>
+              <button type="submit" class="btn btn-green btn-sm">Update</button>
+            </form>
+          </td>
+          <td></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="text-gray">No participants found for this event.</p>
+    {% endif %}
+  </div>
+
+  <!-- Update Form -->
+  <div class="card mt-2">
+    <form method="POST" id="resultForm" class="form-styled">
+      {{ form.hidden_tag() }}
+
+      <div class="form-group">
+        {{ form.result_summary.label(class_="form-label") }}
+        {{ form.result_summary(class_="form-control form-textarea", rows="6", placeholder="Enter the event summary, achievements, and key outcomes.") }}
+      </div>
+
+      <div class="text-center mt-2">
+        {{ form.submit(class_="btn btn-green w-50") }}
+        <a href="{{ url_for('manage_event', event_id=event.id) }}" class="btn btn-dark w-30">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- JavaScript Enhancements -->
+<script>
+  // Prevent empty result submission
+  document.getElementById('resultForm').addEventListener('submit', function(e) {
+    const summary = document.querySelector('[name="result_summary"]').value.trim();
+    if (!summary) {
+      e.preventDefault();
+      alert('Please provide a result summary before submitting.');
+      return;
+    }
+    const btn = this.querySelector('.btn-green');
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+  });
+
+  // Confirm before updating hours
+  document.querySelectorAll('form input[name="new_hours"]').forEach(input => {
+    input.closest('form').addEventListener('submit', function(e) {
+      const hours = parseFloat(input.value);
+      if (isNaN(hours) || hours < 0) {
+        e.preventDefault();
+        alert('Please enter a valid number for hours.');
+        return;
+      }
+      if (!confirm('Are you sure you want to update this volunteer\'s hours?')) {
+        e.preventDefault();
+      }
+    });
+  });
+</script>
+{% endblock %}
+

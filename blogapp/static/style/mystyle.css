@@ -1,0 +1,753 @@
+/* ==============================
+Global Theme Variables
+============================== */
+:root {
+  /* Light theme (default) */
+  --green: #27ae60;
+  --green-dark: #1e8449;
+  --light-bg: #f7faf8;
+  --text-dark: #2c3e50;
+  --gray: #666;
+  --shadow: 0 4px 10px rgba(0,0,0,0.1);
+
+  /* Dark theme variables */
+  --dark-bg: #1a1a1a;
+  --dark-card-bg: #2d2d2d;
+  --dark-text: #ffffff;
+  --dark-gray: #b0b0b0;
+  --dark-shadow: 0 4px 10px rgba(0,0,0,0.3);
+
+  /* Background image variables */
+  --bg-image: none;
+  --bg-size: cover;
+  --bg-position: center;
+  --bg-repeat: no-repeat;
+  --bg-opacity: 0.9;
+
+  /* Countdown theme variables (for easy maintenance) */
+  --countdown-bg: #f8f9fa;
+  --countdown-border: #e0e0e0;
+  --countdown-number: #28a745;
+  --countdown-label: #6c757d;
+  /* Dark theme countdown variables */
+  --dark-countdown-bg: #2d2d2d;
+  --dark-countdown-border: #444;
+  --dark-countdown-number: #2ecc71;
+  --dark-countdown-label: #b0b0b0;
+}
+
+/* ==============================
+Base Structure with Theme Support
+============================== */
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: var(--light-bg);
+  color: var(--text-dark);
+  margin: 0;
+  background-image: var(--bg-image);
+  background-size: var(--bg-size);
+  background-position: var(--bg-position);
+  background-repeat: var(--bg-repeat);
+  transition: all 0.3s ease;
+}
+
+/* ==============================
+Navbar
+============================== */
+nav, .navbar {
+  background-color: var(--green);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 2rem;
+  box-shadow: var(--shadow);
+}
+
+nav .brand, .logo {
+  font-weight: 600;
+  font-size: 20px;
+  margin: 0;
+}
+
+nav .links a, .nav-links a {
+  color: white;
+  margin-left: 1rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+nav .links a:hover,
+.nav-links a:hover,
+.nav-links a.active {
+  text-decoration: underline;
+  color: #eafaf1;
+}
+
+/* ==============================
+Layout
+============================== */
+.container {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* Grid Layout */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.2rem;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.2rem;
+}
+
+/* ==============================
+Cards
+============================== */
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.2rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+}
+.card-title {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: var(--green-dark);
+  margin-bottom: 0.5rem;
+}
+
+/* Card Variants */
+.card-info {
+  background: #e8f6ff;
+  border-left: 5px solid #1b4f72;
+}
+.card-warning {
+  background: #fff3cd;
+  border-left: 5px solid #f39c12;
+}
+.card-light {
+  background: #f8fdf8;
+}
+.card-wide {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 2rem auto;
+}
+
+/* ==============================
+Buttons
+============================== */
+.btn,
+.btn-green {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  background-color: var(--green);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+.btn:hover,
+.btn-green:hover {
+  background-color: var(--green-dark);
+}
+
+/* Color variants – reuse the same button size and only change colors */
+.btn-blue {
+  background-color: #1b4f72;
+  color: #fff;
+}
+.btn-blue:hover {
+  background-color: #163b54;
+}
+
+.btn-purple {
+  background-color: #8e44ad;
+  color: #fff;
+}
+.btn-purple:hover {
+  background-color: #6c3483;
+}
+
+.btn-light {
+  background-color: #ecf0f1;
+  color: #2c3e50;
+}
+.btn-light:hover {
+  background-color: #d0d7da;
+}
+
+.btn-red {
+  background-color: #e74c3c;
+  color: #fff;
+}
+.btn-red:hover {
+  background-color: #c0392b;
+}
+
+.btn-disabled,
+.disabled-btn {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.btn-dark {
+  background-color: var(--text-dark);
+  color: #fff;
+}
+.btn-dark:hover {
+  background-color: #1b2631;
+}
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+}
+
+/* Unified width for primary action buttons for cleaner layout */
+.btn-wide {
+  min-width: 150px;
+}
+
+/* Button group: horizontally centered, consistent gaps, wraps on small screens */
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+/* ==============================
+Forms
+============================== */
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background-color: #fff;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.form-control:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 5px rgba(39,174,96,0.4);
+  outline: none;
+}
+.form-label {
+  font-weight: bold;
+  color: var(--green);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.form-styled { max-width: 700px; margin: auto; }
+.form-group { margin-bottom: 1.2rem; }
+.form-textarea { min-height: 150px; }
+
+/* ==============================
+Section Titles & Info Lists
+============================== */
+.section-title {
+  color: var(--green);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 2px solid var(--green);
+  display: inline-block;
+  padding-bottom: 4px;
+}
+.section-subtitle {
+  color: #1b4f72;
+  margin-top: 0;
+}
+.info-list {
+  line-height: 1.6;
+  margin-left: 1.2rem;
+}
+
+/* ==============================
+Leaderboard
+============================== */
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid #eee;
+}
+.leaderboard-item .rank {
+  font-weight: bold;
+  color: var(--green-dark);
+}
+.leaderboard-card {
+  max-width: 650px;
+  margin-top: 1rem;
+}
+
+/* ==============================
+Tables
+============================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* ==============================
+Footer
+============================== */
+footer {
+  text-align: center;
+  color: #777;
+  margin-top: 2rem;
+  padding: 1rem;
+  font-size: 14px;
+}
+
+/* ==============================
+Utility Classes
+============================== */
+.text-muted { color: #555; }
+.text-gray { color: var(--gray); }
+.text-success { color: var(--green-dark); }
+.text-blue { color: #1b4f72; }
+.text-green-dark { color: var(--green-dark); }
+.text-body { margin: 0.7rem 0; color: var(--text-dark); }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-small { font-size: 0.9rem; }
+
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.mb-2 { margin-bottom: 2rem; }
+.mr-1 { margin-right: 1rem; }
+
+.page-heading {
+  margin-bottom: 1rem;
+  color: var(--text-dark);
+}
+
+.card-number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.purple { color: #8e44ad; }
+
+/* Links */
+.link-green {
+  color: var(--green);
+  font-weight: bold;
+  text-decoration: none;
+}
+.link-green:hover {
+  text-decoration: underline;
+}
+.link-blue {
+  color: #2980b9;
+  text-decoration: none;
+}
+.link-blue:hover {
+  text-decoration: underline;
+}
+
+/* ==============================
+Profile & Lists
+============================== */
+.avatar-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  border: 3px solid var(--green);
+}
+.w-80 { width: 80%; }
+.list-badge {
+  margin-bottom: 0.5rem;
+  background: #ecf9f1;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+/* ==============================
+Visitor Events
+============================== */
+.event-list { list-style: none; padding: 0; margin-top: 1rem; }
+.event-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #fff;
+}
+.event-title { color: var(--green); margin: 0 0 0.5rem; }
+
+/* ==============================
+Form Feedback
+============================== */
+.error-text {
+  color: red;
+  font-size: 0.85rem;
+  margin-left: 0.5rem;
+}
+.category-options { display: flex; flex-wrap: wrap; gap: 1rem; }
+.category-item { font-size: 0.95rem; }
+
+/* Input Validation Effects */
+/* Valid input: soft green glow and border */
+.input-valid,
+.form-control.is-valid {
+  border-color: var(--green) !important;
+  box-shadow: 0 0 6px rgba(39,174,96,0.5) !important;
+}
+
+/* Invalid input: soft red glow and shake animation */
+.input-error,
+.form-control.is-invalid {
+  border-color: #e74c3c !important;
+  box-shadow: 0 0 6px rgba(231,76,60,0.6) !important;
+  animation: shake 0.15s ease-in-out 2;
+}
+
+/* Shake animation for invalid input */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  50% { transform: translateX(3px); }
+  75% { transform: translateX(-3px); }
+  100% { transform: translateX(0); }
+}
+
+/* ==============================
+Select Dropdown Enhancement
+============================== */
+.select-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,<svg width='12' height='8' xmlns='http://www.w3.org/2000/svg'><path d='M1 1l5 5 5-5' stroke='%2327ae60' stroke-width='2' fill='none' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 8px;
+  padding-right: 32px;
+}
+.select-control:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 5px rgba(39,174,96,0.4);
+}
+
+/* ==============================
+Back to Top Button
+============================== */
+.back-to-top {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--green);
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  z-index: 999;
+}
+.back-to-top:hover {
+  background-color: var(--green-dark);
+  transform: translateY(-3px);
+}
+.back-to-top:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(39,174,96,0.3);
+}
+
+/* Red Button (Danger Action) */
+.btn-danger {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  background-color: #e74c3c; /* red tone matching form error style */
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+.btn-danger:hover {
+  background-color: #c0392b;
+}
+
+/* ==============================
+Countdown Styles (with theme support)
+============================== */
+/* Countdown wrapper container */
+.countdown-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  background: var(--countdown-bg); /* Use variable for light theme */
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid var(--countdown-border); /* Use variable for light theme */
+  transition: all 0.3s ease; /* Smooth transition for theme change */
+}
+
+/* Individual countdown item (days/hours/minutes/seconds) */
+.countdown-item {
+  text-align: center;
+  min-width: 60px;
+}
+
+/* Countdown number (large bold text) */
+.countdown-number {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--countdown-number); /* Green theme for light mode */
+  transition: color 0.3s ease;
+}
+
+/* Countdown label (small uppercase text) */
+.countdown-label {
+  font-size: 0.8rem;
+  color: var(--countdown-label); /* Gray for light mode */
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+/* Event status message (above/below countdown) */
+.event-status-message {
+  text-align: center;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+/* ==============================
+Theme Toggle Controls (Cleaned up duplicate styles)
+============================== */
+.theme-controls {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 10px 15px;
+  border-radius: 25px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.theme-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.theme-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Theme icon toggle (sun/moon) */
+.theme-btn .light-icon {
+  display: inline; /* Show sun in light mode */
+}
+.theme-btn .dark-icon {
+  display: none; /* Hide moon in light mode */
+}
+
+/* ==============================
+Dark Theme Styles (Consolidated & Updated)
+============================== */
+/* Base dark theme */
+body.dark-theme {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+/* Inherit color for all child elements */
+body.dark-theme * {
+  color: inherit;
+}
+
+/* Dark theme: Background overlay */
+body.dark-theme::before {
+  background: var(--dark-bg);
+}
+
+/* Dark theme: Theme controls */
+body.dark-theme .theme-controls {
+  background: rgba(45, 45, 45, 0.9);
+  box-shadow: var(--dark-shadow);
+}
+body.dark-theme .theme-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+body.dark-theme .theme-btn .light-icon {
+  display: none; /* Hide sun in dark mode */
+}
+body.dark-theme .theme-btn .dark-icon {
+  display: inline; /* Show moon in dark mode */
+}
+
+/* Dark theme: Navbar */
+body.dark-theme nav,
+body.dark-theme .navbar {
+  background-color: var(--green-dark);
+  box-shadow: var(--dark-shadow);
+}
+body.dark-theme nav .links a,
+body.dark-theme .nav-links a {
+  color: var(--dark-text);
+}
+body.dark-theme nav .links a:hover,
+body.dark-theme .nav-links a:hover,
+body.dark-theme .nav-links a.active {
+  color: #eafaf1;
+}
+
+/* Dark theme: Cards */
+body.dark-theme .card {
+  background: var(--dark-card-bg);
+  box-shadow: var(--dark-shadow);
+}
+body.dark-theme .card:hover {
+  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+}
+body.dark-theme .card-title {
+  color: var(--green);
+}
+
+/* Dark theme: Forms & Select */
+body.dark-theme .form-control,
+body.dark-theme .select-control {
+  background-color: var(--dark-card-bg);
+  color: var(--dark-text);
+  border-color: #444;
+}
+body.dark-theme .form-control:focus,
+body.dark-theme .select-control:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 5px rgba(39,174,96,0.5);
+}
+
+/* Dark theme: Tables */
+body.dark-theme table {
+  color: var(--dark-text);
+}
+body.dark-theme th,
+body.dark-theme td {
+  border-bottom: 1px solid #444;
+}
+body.dark-theme tr:hover {
+  background-color: #3a3a3a;
+}
+
+/* Dark theme: Flash messages */
+body.dark-theme .card[style*="background-color:#eafaf1;"] {
+  /* Keep light flash background but use dark text for better contrast in dark mode */
+  background-color: #eafaf1;
+  color: var(--text-dark);
+}
+
+/* Dark theme: Custom background label */
+body.dark-theme .custom-bg-label {
+  background: var(--green-dark);
+}
+body.dark-theme .custom-bg-label:hover {
+  background: var(--green);
+}
+
+/* ==============================
+Dark Theme: Countdown Styles (Key Addition)
+============================== */
+body.dark-theme .countdown-wrapper {
+  background: var(--dark-countdown-bg); /* Dark background for countdown */
+  border-color: var(--dark-countdown-border); /* Dark border */
+}
+body.dark-theme .countdown-number {
+  color: var(--dark-countdown-number); /* Lighter green for dark mode */
+}
+body.dark-theme .countdown-label {
+  color: var(--dark-countdown-label); /* Lighter gray for dark mode */
+}
+
+/* ==============================
+Custom Background Styles
+============================== */
+.custom-bg-label {
+  background: var(--green);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+.custom-bg-label:hover {
+  background: var(--green-dark);
+}
+
+/* Background overlay for readability */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--light-bg);
+  opacity: var(--bg-opacity);
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+
+/* Reduce opacity when background image is set */
+body[style*="--bg-image: url("]::before {
+  opacity: 0.7;
+}

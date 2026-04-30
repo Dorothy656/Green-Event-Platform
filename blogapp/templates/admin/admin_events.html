@@ -1,0 +1,101 @@
+{% extends "loggedin_base.html" %}
+{% block title %}Manage Events{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- Header Section -->
+  <div class="card card-wide">
+    <h2 class="page-heading text-center">📋 Event Management</h2>
+    <p class="text-gray text-center">View, manage, and delete existing events.</p>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="card mt-2 text-center" style="padding: 1rem;">
+    <form method="get" action="{{ url_for('admin_events') }}" class="inline-form">
+      <input
+        type="text"
+        name="search"
+        placeholder="Search by ID, Title, or Organizer..."
+        value="{{ search_query or '' }}"
+        class="input-field"
+        style="padding: 0.5rem; width: 280px; border: 1px solid #ccc; border-radius: 6px; margin-right: 0.5rem;">
+      <button type="submit" class="btn btn-blue btn-sm">Search</button>
+      {% if search_query %}
+        <a href="{{ url_for('admin_events') }}" class="btn btn-gray btn-sm">Clear</a>
+      {% endif %}
+    </form>
+  </div>
+
+  <!-- Events Table -->
+  <div class="card mt-2">
+    {% if events %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Date</th>
+          <th>Location</th>
+          <th>Organizer</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in events %}
+        <tr>
+          <td>{{ event.id }}</td>
+          <td>{{ event.title }}</td>
+          <td>{{ event.date.strftime('%Y-%m-%d') if event.date else 'N/A' }}</td>
+          <td>{{ event.location or 'N/A' }}</td>
+          <td>{{ event.organizer.username if event.organizer else 'N/A' }}</td>
+          <td>
+            <a href="{{ url_for('admin_edit_event', event_id=event.id) }}" class="btn btn-blue btn-sm">✏ Manage</a>
+            <a href="{{ url_for('admin_delete_event', event_id=event.id) }}" class="btn btn-red btn-sm delete-btn">🗑 Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p class="text-gray">No events found.</p>
+    {% endif %}
+  </div>
+
+  <!-- Back to Top -->
+  <div class="text-center mt-2">
+    <button id="scrollTopBtn" class="btn btn-dark w-50">↑ Back to Top</button>
+  </div>
+</div>
+
+<!-- JavaScript Enhancements -->
+<script>
+  // Confirm before deleting event
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const confirmed = confirm('Are you sure you want to delete this event? This action cannot be undone.');
+      if (!confirmed) e.preventDefault();
+    });
+  });
+
+  // Smooth scroll to top
+  const topBtn = document.getElementById('scrollTopBtn');
+  if (topBtn) {
+    topBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // Highlight rows on hover
+  document.querySelectorAll('tbody tr').forEach(row => {
+    row.addEventListener('mouseenter', () => row.style.backgroundColor = '#f9f9f9');
+    row.addEventListener('mouseleave', () => row.style.backgroundColor = '');
+  });
+
+  // Autofocus on search input when query exists
+  const searchInput = document.querySelector('input[name="search"]');
+  if (searchInput && "{{ search_query }}") {
+    searchInput.focus();
+  }
+</script>
+{% endblock %}

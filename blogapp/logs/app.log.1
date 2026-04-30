@@ -1,0 +1,144 @@
+2025-12-09 21:24:48,534 - blogapp - INFO - Application started
+2025-12-09 21:34:02,818 - blogapp - INFO - Application started
+2025-12-09 21:39:45,852 - blogapp - INFO - Application started
+2025-12-09 21:43:40,465 - blogapp - INFO - Application started
+2025-12-09 21:51:30,773 - blogapp - INFO - Application started
+2025-12-09 21:52:09,677 - blogapp - INFO - Application started
+2025-12-09 21:52:48,294 - blogapp - INFO - Application started
+2025-12-09 21:58:49,906 - blogapp - INFO - Application started
+2025-12-09 22:01:50,392 - blogapp - INFO - Application started
+2025-12-09 22:02:33,802 - blogapp - INFO - Application started
+2025-12-09 22:09:35,829 - blogapp - INFO - Application started
+2025-12-09 22:13:29,351 - blogapp - INFO - Application started
+2025-12-09 22:15:05,479 - blogapp - INFO - Application started
+2025-12-09 22:16:42,269 - blogapp - INFO - Application started
+2025-12-09 22:28:38,946 - blogapp - INFO - Application started
+2025-12-09 22:30:44,702 - blogapp - INFO - Application started
+2025-12-10 14:35:36,508 - blogapp - INFO - Application started
+2025-12-10 14:35:47,585 - blogapp - INFO - User 'qb' logged in successfully as Volunteer
+2025-12-10 14:36:46,474 - blogapp - INFO - Application started
+2025-12-11 14:33:09,001 - blogapp - INFO - Application started
+2025-12-11 14:36:33,409 - blogapp - INFO - Application started
+2025-12-11 14:36:44,852 - blogapp - INFO - Application started
+2025-12-11 14:37:07,562 - blogapp - INFO - Application started
+2025-12-11 14:37:14,675 - blogapp - INFO - Application started
+2025-12-11 14:42:29,628 - blogapp - INFO - Application started
+2025-12-11 14:42:30,992 - blogapp - INFO - Application started
+2025-12-11 14:46:12,077 - blogapp - INFO - Application started
+2025-12-11 14:48:01,642 - blogapp - INFO - Application started
+2025-12-11 14:48:21,606 - blogapp - INFO - Application started
+2025-12-11 14:48:30,093 - blogapp - INFO - User 'ADMIN' logged in successfully as Admin
+2025-12-12 17:15:15,483 - blogapp - INFO - Application started
+2025-12-12 17:15:36,095 - blogapp - INFO - User 'ADMIN' logged in successfully as Admin
+2025-12-12 17:17:21,075 - blogapp - ERROR - Exception on /admin/disable_user/5 [POST]
+Traceback (most recent call last):
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Desktop/Group15_Green_Event_Platform 2/blogapp/routes.py", line 39, in decorated_view
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Desktop/Group15_Green_Event_Platform 2/blogapp/routes.py", line 1087, in disable_user
+    form = DisableUserForm()
+           ^^^^^^^^^^^^^^^
+NameError: name 'DisableUserForm' is not defined
+2025-12-12 17:17:28,358 - blogapp - ERROR - Exception on /admin/disable_user/5 [POST]
+Traceback (most recent call last):
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Desktop/Group15_Green_Event_Platform 2/blogapp/routes.py", line 39, in decorated_view
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Desktop/Group15_Green_Event_Platform 2/blogapp/routes.py", line 1087, in disable_user
+    form = DisableUserForm()
+           ^^^^^^^^^^^^^^^
+NameError: name 'DisableUserForm' is not defined
+2025-12-12 17:35:58,326 - blogapp - INFO - Application started
+2025-12-12 17:43:27,859 - blogapp - INFO - Application started
+2025-12-12 18:41:39,224 - blogapp - INFO - Application started
+2025-12-12 18:42:54,046 - blogapp - INFO - User 'bb' logged in successfully as Organizer
+2025-12-12 19:03:21,911 - blogapp - INFO - Application started
+2025-12-12 19:03:36,089 - blogapp - INFO - User 'ADMIN' logged in successfully as Admin
+2025-12-12 19:04:30,189 - blogapp - WARNING - Failed login attempt for user 'bb': Incorrect password
+2025-12-12 19:04:35,875 - blogapp - INFO - User 'bb' ban expired. Auto-unbanned during login.
+2025-12-12 19:04:35,875 - blogapp - INFO - User 'bb' logged in successfully as Organizer
+2025-12-12 19:04:45,834 - blogapp - WARNING - Failed login attempt for user '123': Incorrect password
+2025-12-12 19:04:50,999 - blogapp - WARNING - Failed login attempt for user '123': Incorrect password
+2025-12-12 19:05:05,186 - blogapp - INFO - User 'ADMIN' logged in successfully as Admin
+2025-12-12 19:05:32,123 - blogapp - WARNING - Banned user 'bb' tried to login.
+2025-12-12 19:14:38,282 - blogapp - INFO - Application started
+2025-12-12 19:14:49,928 - blogapp - INFO - User 'bb' ban expired. Auto-unbanned during login.
+2025-12-12 19:14:49,928 - blogapp - INFO - User 'bb' logged in successfully as Organizer
+2025-12-12 19:21:47,857 - blogapp - INFO - Application started
+2025-12-12 19:38:49,622 - blogapp - INFO - Application started
+2025-12-12 19:39:10,738 - blogapp - INFO - User '123' logged in successfully as Volunteer
+2025-12-12 19:39:19,220 - blogapp - INFO - User 'bb' logged in successfully as Organizer
+2025-12-12 19:43:18,817 - blogapp - INFO - Application started
+2025-12-12 19:43:36,482 - blogapp - INFO - User '123' logged in successfully as Volunteer
+2025-12-12 19:43:41,505 - blogapp - ERROR - Exception on /event/6 [GET]
+Traceback (most recent call last):
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Desktop/Group15_Green_Event_Platform 2/blogapp/routes.py", line 39, in decorated_view
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Desktop/Group15_Green_Event_Platform 2/blogapp/routes.py", line 459, in event_detail
+    return render_template(
+           ^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/flask/templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/jinja2/environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/jinja2/environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/jinja2/environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/jinja2/loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/jinja2/environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+  File "/Users/dorothy/Library/Python/3.11/lib/python/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/dorothy/Desktop/Group15_Green_Event_Platform 2/blogapp/templates/event_detail.html", line 101, in template
+    {% block title %}{{ event.title }} - Event Detail{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.TemplateAssertionError: block 'title' defined twice
+2025-12-12 19:48:41,796 - blogapp - INFO - Application started
+2025-12-12 20:07:08,260 - blogapp - INFO - Application started
+2025-12-12 20:07:31,879 - blogapp - INFO - User 'ADMIN' logged in successfully as Admin
+2025-12-12 20:17:52,345 - blogapp - INFO - User 'bb' logged in successfully as Organizer
+2025-12-12 20:18:48,457 - blogapp - INFO - User '123' logged in successfully as Volunteer

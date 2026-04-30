@@ -1,0 +1,45 @@
+{% extends "loggedin_base.html" %}
+{% block title %}Update User Role{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- Header Section -->
+  <div class="card card-wide">
+    <h2 class="page-heading">🧩 Update Role for {{ user.username }}</h2>
+    <p class="text-gray">Modify the user’s permission level within the platform.</p>
+  </div>
+
+  <!-- Update Form -->
+  <div class="card mt-2">
+    <form method="POST" id="roleForm" class="form-styled">
+      {{ form.hidden_tag() }}
+
+      <div class="form-group">
+        {{ form.role.label(class_="form-label") }}
+        {{ form.role(class_="form-control") }}
+      </div>
+
+      <div class="text-center mt-2">
+        {{ form.submit(class_="btn btn-green w-100") }}
+      </div>
+    </form>
+
+    <div class="text-center mt-2">
+      <a href="{{ url_for('admin_users') }}" class="btn btn-dark w-50">← Back to User List</a>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript Enhancements -->
+<script>
+  // Prevent empty role submission
+  document.getElementById('roleForm').addEventListener('submit', function(e) {
+    const select = this.querySelector('select');
+    if (!select.value) {
+      e.preventDefault();
+      alert('Please select a valid role before submitting.');
+    }
+  });
+</script>
+{% endblock %}

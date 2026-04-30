@@ -1,0 +1,54 @@
+{% extends "loggedin_base.html" %}
+{% block title %}Create Post - Green Event Platform{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="card card-wide">
+    <h2 class="page-heading">📝 Create a New Post</h2>
+
+    <form action="" method="post" novalidate class="form-styled">
+      {{ form.hidden_tag() }}
+
+      <div class="form-group">
+        {{ form.headline.label(class_="form-label") }}
+        {{ form.headline(class_="form-control") }}
+        {% for error in form.headline.errors %}
+          <span class="error-text">[{{ error }}]</span>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.date.label(class_="form-label") }}
+        {{ form.date(class_="form-control") }}
+        {% for error in form.date.errors %}
+          <span class="error-text">[{{ error }}]</span>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.category.label(class_="form-label") }}
+        <div class="category-options">
+          {% for choice in form.category %}
+            <label class="category-item">{{ choice }} {{ choice.label }}</label>
+          {% endfor %}
+        </div>
+        {% for error in form.category.errors %}
+          <span class="error-text">[{{ error }}]</span>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.postbody.label(class_="form-label") }}
+        {{ form.postbody(class_="form-control form-textarea") }}
+        {% for error in form.postbody.errors %}
+          <span class="error-text">[{{ error }}]</span>
+        {% endfor %}
+      </div>
+
+      <div class="text-center mt-2">
+        {{ form.submit(class_="btn btn-green") }}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

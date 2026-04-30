@@ -1,0 +1,99 @@
+{% extends "loggedin_base.html" %}
+{% block title %}All Feedback{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- Header Section -->
+  <div class="card card-wide">
+    <h2 class="page-heading text-center">Feedback Overview</h2>
+    <p class="text-gray text-center">Monitor and manage all volunteer feedback across events.</p>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="card mt-2 text-center" style="padding: 1rem;">
+    <form method="get" action="{{ url_for('admin_feedback') }}" class="inline-form">
+      <input
+        type="text"
+        name="search"
+        placeholder="Search by ID, User, Event, or Rating..."
+        value="{{ search_query or '' }}"
+        class="input-field"
+        style="padding: 0.5rem; width: 300px; border: 1px solid #ccc; border-radius: 6px; margin-right: 0.5rem;">
+      <button type="submit" class="btn btn-blue btn-sm">Search</button>
+      {% if search_query %}
+        <a href="{{ url_for('admin_feedback') }}" class="btn btn-gray btn-sm">Clear</a>
+      {% endif %}
+    </form>
+  </div>
+
+  <!-- Feedback Table -->
+  <div class="card mt-2">
+    {% if feedbacks %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Event</th>
+          <th>User</th>
+          <th>Rating</th>
+          <th>Comment</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fb in feedbacks %}
+        <tr>
+          <td>{{ fb.id }}</td>
+          <td>{{ fb.event.title if fb.event else 'N/A' }}</td>
+          <td>{{ fb.user.username if fb.user else 'N/A' }}</td>
+          <td class="purple"><b>{{ fb.rating }}</b></td>
+          <td>{{ fb.comment }}</td>
+          <td>
+            <a href="{{ url_for('admin_edit_feedback', feedback_id=fb.id) }}" class="btn btn-blue btn-sm">Edit</a>
+            <form method="post" action="{{ url_for('admin_delete_feedback', feedback_id=fb.id) }}"
+                  style="display:inline;" onsubmit="return confirmDelete();">
+              <button type="submit" class="btn btn-red btn-sm">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p class="text-gray">No feedback records available.</p>
+    {% endif %}
+  </div>
+
+  <!-- Back to Top -->
+  <div class="text-center mt-2">
+    <button id="scrollTopBtn" class="btn btn-dark w-50">↑ Back to Top</button>
+  </div>
+</div>
+
+<!-- JavaScript Enhancements -->
+<script>
+  // Smooth scroll to top
+  const btn = document.getElementById('scrollTopBtn');
+  if (btn) {
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  }
+
+  // Highlight rows on hover
+  document.querySelectorAll('tbody tr').forEach(row => {
+    row.addEventListener('mouseenter', () => row.style.backgroundColor = '#f9f9f9');
+    row.addEventListener('mouseleave', () => row.style.backgroundColor = '');
+  });
+
+  // Autofocus on search input when query exists
+  const searchInput = document.querySelector('input[name="search"]');
+  if (searchInput && "{{ search_query }}") {
+    searchInput.focus();
+  }
+
+  // Confirm before deleting feedback
+  function confirmDelete() {
+    return confirm("Are you sure you want to delete this feedback?");
+  }
+</script>
+{% endblock %}

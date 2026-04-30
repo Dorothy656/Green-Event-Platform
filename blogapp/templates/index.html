@@ -1,0 +1,136 @@
+{% extends "loggedin_base.html" %}
+{% block title %}Home - Green Event Platform{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- ===== WELCOME ===== -->
+  <h2 class="page-heading">🌏 Welcome, {{ session['USERNAME'] }}!</h2>
+  <p class="text-muted">Your role: <b>{{ session['ROLE'] }}</b></p>
+
+  <!-- ===== PLATFORM STATISTICS ===== -->
+  <div class="grid-3 mb-2">
+    <div class="card">
+      <div class="card-title">Total Events</div>
+      <p class="card-number">{{ total_events }}</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Total Volunteer Hours</div>
+      <p class="card-number">{{ total_hours }} hrs</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Registered Volunteers</div>
+      <p class="card-number">{{ volunteer_count }}</p>
+    </div>
+  </div>
+
+  <!-- ===== ORGANIZER PANEL ===== -->
+  {% if session['ROLE'] == 'Organizer' %}
+  <div class="card card-info mb-2">
+    <h3 class="section-subtitle">🛠 Organizer Dashboard</h3>
+    <p>Manage your created events, check volunteer feedback, and publish updates.</p>
+    <div class="button-group">
+      <a href="{{ url_for('organizer_events') }}" class="btn btn-blue">📋 Manage My Events</a>
+      <a href="{{ url_for('create_event') }}" class="btn btn-green">+ Create New Event</a>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ===== UPCOMING EVENTS ===== -->
+  <h3 class="section-title">🌱 Upcoming Events</h3>
+
+  <!-- 🔍 Search Bar -->
+  <div class="card mt-1 text-center" style="padding: 1rem;">
+    <form method="get" action="{{ url_for('index') }}" class="inline-form">
+      <input
+        type="text"
+        name="search"
+        placeholder="Search by event title or location..."
+        value="{{ search_query or '' }}"
+        class="input-field"
+        style="padding: 0.5rem; width: 300px; border: 1px solid #ccc; border-radius: 6px; margin-right: 0.5rem;">
+      <button type="submit" class="btn btn-blue btn-sm">Search</button>
+      {% if search_query %}
+        <a href="{{ url_for('index') }}" class="btn btn-gray btn-sm">Clear</a>
+      {% endif %}
+    </form>
+  </div>
+
+  <div class="grid-3">
+    {% for event in events %}
+    <div class="card">
+      <div class="card-title">{{ event.title }}</div>
+      <p class="text-gray">📅 {{ event.date.strftime('%Y-%m-%d') }}</p>
+      <p class="text-gray">📍 {{ event.location }}</p>
+      <p class="text-body">{{ event.description[:80] }}...</p>
+
+      <!-- ===== ROLE-BASED ACTIONS ===== -->
+      {% if session['ROLE'] == 'Visitor' %}
+        <a class="btn btn-light" onclick="alert('Please log in to join events!')">View Only</a>
+
+      {% elif session['ROLE'] == 'Volunteer' %}
+        {% if event.id in joined_event_ids %}
+          <p class="text-success">✅ Joined</p>
+          <a class="btn btn-light" href="{{ url_for('event_detail', event_id=event.id) }}">View Details</a>
+        {% else %}
+          <a class="btn btn-green" href="{{ url_for('event_detail', event_id=event.id) }}">View / Join</a>
+        {% endif %}
+
+      {% elif session['ROLE'] == 'Organizer' %}
+        {% if event.organizer_id == session['USER_ID'] %}
+          <a class="btn btn-blue" href="{{ url_for('manage_event', event_id=event.id) }}">Manage</a>
+        {% else %}
+          <a class="btn" href="{{ url_for('event_detail', event_id=event.id) }}">View</a>
+        {% endif %}
+
+      {% elif session['ROLE'] == 'Admin' %}
+        <a class="btn btn-red" href="{{ url_for('admin_events', event_id=event.id) }}">Admin Panel</a>
+      {% else %}
+        <a class="btn" href="{{ url_for('event_detail', event_id=event.id) }}">View</a>
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    {% if events|length == 0 %}
+      <p class="text-gray">No events available at the moment.</p>
+    {% endif %}
+  </div>
+
+  <!-- ===== LEADERBOARD ===== -->
+  <h3 class="section-title purple">🏆 Volunteer Leaderboard</h3>
+  <div class="card leaderboard-card">
+    {% for user in leaderboard %}
+    <div class="leaderboard-item">
+      <span class="rank">#{{ loop.index }}</span>
+      <span>{{ user.username }}</span>
+      <span>{{ user.total_hours }} hrs</span>
+    </div>
+    {% endfor %}
+    {% if leaderboard|length == 0 %}
+      <p>No leaderboard data yet.</p>
+    {% endif %}
+  </div>
+
+  <!-- ===== VISITOR WARNING ===== -->
+  {% if session['ROLE'] == 'Visitor' %}
+  <div class="card card-warning mt-2">
+    <p>🔒 You are currently browsing as a <b>Visitor</b>. Please
+      <a href="{{ url_for('login') }}">log in</a> or
+      <a href="{{ url_for('register') }}">sign up</a>
+      to join events and track your impact.</p>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Optional JS -->
+<script>
+  // Optional: autofocus search field if a query exists
+  const searchInput = document.querySelector('input[name="search"]');
+  if (searchInput && "{{ search_query }}") {
+    searchInput.focus();
+  }
+</script>
+{% endblock %}
+

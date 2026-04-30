@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome - Green Event Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style/mystyle.css') }}">
+</head>
+
+<body>
+  <!-- 🌿 Public Navigation -->
+  <nav>
+    <div class="brand">🌏 Green Event Platform</div>
+    <div class="links">
+      <a href="{{ url_for('login') }}">Login</a>
+      <a href="{{ url_for('signup') }}">Sign Up</a>
+      <a href="{{ url_for('static', filename='plain.html') }}">About</a>
+    </div>
+  </nav>
+
+  <!-- 🌿 Hero Section -->
+  <div class="container" style="text-align:center; margin-top:4rem;">
+    <h1 style="color:var(--green); font-size:2.5rem; margin-bottom:1rem;">
+      Welcome to Green Event Platform
+    </h1>
+    <p style="max-width:650px; margin:auto; color:var(--gray); font-size:1.1rem; line-height:1.6;">
+      Empowering communities to make the world greener — one event at a time.
+      You can <b>login</b> to participate, <b>sign up</b> to join our community,
+      or simply explore in <b>Visitor Mode</b>.
+    </p>
+
+    <div style="margin-top:2.5rem;">
+      <a href="{{ url_for('login') }}" class="btn btn-green" style="margin-right:1rem;">Login / Sign Up</a>
+      <a href="{{ url_for('visitor_entry') }}" class="btn" style="background-color:var(--text-dark);">Continue as Visitor</a>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 Green Event Platform. All Rights Reserved.
+  </footer>
+</body>
+</html>
+
+

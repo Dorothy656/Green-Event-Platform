@@ -1,0 +1,88 @@
+{% extends "loggedin_base.html" %}
+{% block title %}Profile - Green Event Platform{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2 class="page-heading">👤 User Profile</h2>
+
+  <div class="grid-2">
+    <!-- ==============================
+         LEFT CARD (User Basic Info)
+    =============================== -->
+    <div class="card text-center card-light">
+      {% if user.avatar and user.avatar != 'images/default_avatar.png' %}
+        <img src="{{ url_for('static', filename=user.avatar) }}" alt="User Avatar" class="avatar-img">
+      {% else %}
+        <img src="{{ url_for('static', filename='images/default_avatar.png') }}" alt="Default Avatar" class="avatar-img">
+      {% endif %}
+
+      <div class="card-title text-blue">Basic Information</div>
+      <p><strong>Username:</strong> {{ user.username }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Role:</strong> {{ user.role }}</p>
+      <p><strong>Gender:</strong> {{ user.gender or 'Not set' }}</p>
+      <p><strong>Date of Birth:</strong> {{ user.dob.strftime('%Y-%m-%d') if user.dob else 'Not set' }}</p>
+
+      {% if user.cv_file %}
+        <p><strong>CV:</strong>
+          <a href="{{ url_for('static', filename=user.cv_file) }}" download class="link-blue">Download CV</a>
+        </p>
+      {% endif %}
+
+      <!-- Profile Action Buttons -->
+      <div class="mt-1">
+        <a href="{{ url_for('edit_profile') }}" class="btn btn-green w-80">✏️ Edit My Profile</a>
+      </div>
+
+      <!-- Delete Account Button -->
+      <form action="{{ url_for('delete_account') }}" method="POST" onsubmit="return confirmDelete();" class="mt-1">
+        <button type="submit" class="btn btn-danger w-80">🗑️ Delete My Account</button>
+      </form>
+    </div>
+
+    <!-- ==============================
+         RIGHT CARD (User Activity)
+    =============================== -->
+    <div class="card">
+      {% if user.role == 'Volunteer' %}
+        <div class="card-title text-green-dark">🌱 Joined Events</div>
+        {% if joined_events %}
+          <ul class="info-list">
+            {% for event in joined_events %}
+              <li class="list-badge">
+                <b>{{ event.title }}</b> — {{ event.date.strftime('%Y-%m-%d') }} ({{ event.location }})
+              </li>
+            {% endfor %}
+          </ul>
+          <p><b>Total Hours:</b> {{ total_hours }} hrs</p>
+        {% else %}
+          <p class="text-gray">You haven’t joined any events yet.</p>
+        {% endif %}
+
+      {% elif user.role == 'Organizer' %}
+        <div class="card-title text-green-dark">📅 Created Events</div>
+        {% if created_events %}
+          <ul class="info-list">
+            {% for event in created_events %}
+              <li class="list-badge">
+                <b>{{ event.title }}</b> — {{ event.date.strftime('%Y-%m-%d') }}
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-gray">You haven’t created any events yet.</p>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- ==============================
+     Confirmation Script
+============================== -->
+<script>
+  function confirmDelete() {
+    return confirm("⚠️ Are you sure you want to delete your account? This action cannot be undone, and all related data will be permanently removed.");
+  }
+</script>
+{% endblock %}

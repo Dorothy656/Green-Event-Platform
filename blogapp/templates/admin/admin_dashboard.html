@@ -1,0 +1,68 @@
+{% extends "loggedin_base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- Header Section -->
+  <div class="card card-wide">
+    <h2 class="page-heading">⚙️ Admin Dashboard</h2>
+    <p class="text-gray">Overview of users, events, and platform statistics.</p>
+  </div>
+
+  <!-- Stats Summary -->
+  <div class="grid-3 mt-2">
+    <div class="card text-center">
+      <div class="card-title">👤 Total Users</div>
+      <p class="card-number counter" data-target="{{ total_users }}">0</p>
+    </div>
+    <div class="card text-center">
+      <div class="card-title">🤝 Volunteers</div>
+      <p class="card-number counter" data-target="{{ total_volunteers }}">0</p>
+    </div>
+    <div class="card text-center">
+      <div class="card-title">📅 Events</div>
+      <p class="card-number counter" data-target="{{ total_events }}">0</p>
+    </div>
+  </div>
+
+  <div class="grid-3 mt-2">
+    <div class="card text-center">
+      <div class="card-title">🧑‍💼 Organizers</div>
+      <p class="card-number counter" data-target="{{ total_organizers }}">0</p>
+    </div>
+    <div class="card text-center">
+      <div class="card-title">💬 Feedbacks</div>
+      <p class="card-number counter" data-target="{{ total_feedbacks }}">0</p>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="text-center mt-2 button-group">
+    <a href="{{ url_for('admin_users') }}" class="btn btn-blue w-30">👥 Manage Users</a>
+    <a href="{{ url_for('admin_events') }}" class="btn btn-green w-30">📋 Manage Events</a>
+    <a href="{{ url_for('admin_feedback') }}" class="btn btn-purple w-30">💬 View Feedback</a>
+     <a href="{{ url_for('admin_logs') }}" class="btn btn-gray w-30 mt-2">📋 System Logs</a>
+  </div>
+</div>
+
+<!-- JavaScript Enhancements -->
+<script>
+  // Count-up animation for stats
+  document.querySelectorAll('.counter').forEach(counter => {
+    const target = +counter.dataset.target;
+    let count = 0;
+    const step = Math.ceil(target / 60);
+    const update = () => {
+      count += step;
+      if (count < target) {
+        counter.textContent = count;
+        requestAnimationFrame(update);
+      } else {
+        counter.textContent = target;
+      }
+    };
+    update();
+  });
+</script>
+{% endblock %}

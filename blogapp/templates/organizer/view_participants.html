@@ -1,0 +1,96 @@
+{% extends "loggedin_base.html" %}
+{% block title %}Participants - {{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- Header Section -->
+  <div class="card card-wide">
+    <h2 class="page-heading">👥 Participants for {{ event.title }}</h2>
+    <p><b>Date:</b> {{ event.date.strftime('%Y-%m-%d') }}</p>
+    <p><b>Location:</b> {{ event.location }}</p>
+  </div>
+
+  <!-- 🔍 Search Bar -->
+  <div class="card mt-2 text-center" style="padding: 1rem;">
+    <form method="get" action="{{ url_for('view_participants', event_id=event.id) }}" class="inline-form">
+      <input
+        type="text"
+        name="search"
+        placeholder="Search participant by name..."
+        value="{{ search_query or '' }}"
+        class="input-field"
+        style="padding: 0.5rem; width: 280px; border: 1px solid #ccc; border-radius: 6px; margin-right: 0.5rem;">
+      <button type="submit" class="btn btn-blue btn-sm">Search</button>
+      {% if search_query %}
+        <a href="{{ url_for('view_participants', event_id=event.id) }}" class="btn btn-gray btn-sm">Clear</a>
+      {% endif %}
+    </form>
+  </div>
+
+  <!-- Back Button -->
+  <div class="text-center mt-2">
+    <a href="{{ url_for('manage_event', event_id=event.id) }}" class="btn btn-blue">⬅ Back to Management</a>
+  </div>
+
+  <!-- Participants Table -->
+  <div class="card mt-2">
+    <div class="card-title">📋 Participation List</div>
+    {% if participants %}
+    <table class="table mt-1">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Hours</th>
+          <th>Participation Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in participants %}
+        <tr>
+          <td>{{ p.user.username }}</td>
+          <td>{{ "%.1f"|format(p.hours) }} hrs</td>
+          <td>{{ p.participation_date.strftime('%Y-%m-%d') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="text-gray text-center mt-1">
+      {% if search_query %}
+        No participants found matching "{{ search_query }}".
+      {% else %}
+        No participants yet for this event.
+      {% endif %}
+    </p>
+    {% endif %}
+  </div>
+
+  <!-- Back to Top Button -->
+  <div class="text-center mt-2">
+    <button id="scrollTopBtn" class="btn btn-dark w-50">↑ Back to Top</button>
+  </div>
+</div>
+
+<!-- JavaScript Enhancements -->
+<script>
+  // Smooth scroll to top
+  const topButton = document.getElementById('scrollTopBtn');
+  if (topButton) {
+    topButton.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // Row hover animation
+  const rows = document.querySelectorAll('tbody tr');
+  rows.forEach(row => {
+    row.addEventListener('mouseenter', () => row.style.backgroundColor = '#f9f9f9');
+    row.addEventListener('mouseleave', () => row.style.backgroundColor = '');
+  });
+
+  // Autofocus search
+  const searchInput = document.querySelector('input[name="search"]');
+  if (searchInput && "{{ search_query }}") searchInput.focus();
+</script>
+{% endblock %}

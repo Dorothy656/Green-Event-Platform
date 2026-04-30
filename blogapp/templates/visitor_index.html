@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Visitor Mode - Green Event Platform{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="card card-wide">
+
+    <!-- Page Title -->
+    <h2 class="page-heading text-center">Explore Green Events</h2>
+    <p class="text-center text-muted">
+      You are currently browsing as a <b>Visitor</b>.
+      Please <a href="{{ url_for('login') }}" class="link-green">log in</a>
+      to join or create events.
+    </p>
+
+    <!-- Events List -->
+    {% if events and events|length > 0 %}
+      <ul class="event-list">
+        {% for event in events %}
+        <li class="event-item">
+          <h3 class="event-title">{{ event.title }}</h3>
+          <p class="text-muted">{{ event.description }}</p>
+          <p class="text-small text-gray">
+            📅 {{ event.date.strftime('%Y-%m-%d') }} | 📍 {{ event.location }}
+          </p>
+          <div class="text-right mt-1">
+            <a href="{{ url_for('event_detail', event_id=event.id) }}" class="btn btn-green btn-sm">
+              View Details →
+            </a>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-center text-gray mt-1">No upcoming events yet. Stay tuned!</p>
+    {% endif %}
+
+    <!-- Back or Login Button -->
+    <div class="text-center mt-2">
+      <a href="{{ url_for('login') }}" class="btn btn-green mr-1">Login to Participate</a>
+      <a href="{{ url_for('welcome') }}" class="btn btn-dark">Back to Welcome</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

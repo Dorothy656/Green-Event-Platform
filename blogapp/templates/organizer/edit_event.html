@@ -1,0 +1,66 @@
+{% extends "loggedin_base.html" %}
+{% block title %}Edit Event - Green Event Platform{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="card card-wide">
+    <h2 class="page-heading text-center">🌱 Edit Event Details</h2>
+
+    <form method="POST" novalidate id="editEventForm" class="form-styled">
+      {{ form.hidden_tag() }}
+
+      <div class="form-group">
+        {{ form.title.label(class_="form-label") }}
+        {{ form.title(class_="form-control", placeholder="Enter updated event title") }}
+      </div>
+
+      <div class="form-group">
+        {{ form.description.label(class_="form-label") }}
+        {{ form.description(class_="form-control form-textarea", placeholder="Update description and objectives") }}
+      </div>
+
+      <div class="form-group">
+        {{ form.date.label(class_="form-label") }}
+        {{ form.date(class_="form-control") }}
+      </div>
+
+      <div class="form-group">
+        {{ form.location.label(class_="form-label") }}
+        {{ form.location(class_="form-control", placeholder="Update event location") }}
+      </div>
+
+      <div class="text-center mt-2">
+        {{ form.submit(class_="btn btn-green w-80") }}
+      </div>
+    </form>
+
+    <div class="text-center mt-1">
+      <a href="{{ url_for('manage_event', event_id=event.id) }}" class="btn btn-dark">← Back to Event Management</a>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript Enhancements -->
+<script>
+  // Auto highlight changed fields
+  document.querySelectorAll('#editEventForm .form-control').forEach(input => {
+    input.addEventListener('input', () => {
+      input.style.boxShadow = '0 0 5px rgba(39,174,96,0.4)';
+    });
+  });
+
+  // Prevent empty submission
+  document.getElementById('editEventForm').addEventListener('submit', function(e) {
+    const title = document.querySelector('[name="title"]').value.trim();
+    const desc = document.querySelector('[name="description"]').value.trim();
+    if (!title || !desc) {
+      e.preventDefault();
+      alert('Please fill in at least the title and description before saving changes.');
+      return;
+    }
+    const btn = this.querySelector('.btn-green');
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+  });
+</script>
+{% endblock %}

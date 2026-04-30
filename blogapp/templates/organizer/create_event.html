@@ -1,0 +1,59 @@
+{% extends "loggedin_base.html" %}
+{% block title %}Create Event - Green Event Platform{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="card card-wide">
+    <h2 class="page-heading text-center">🌏 Create a New Event</h2>
+
+    <form method="POST" novalidate id="createEventForm" class="form-styled">
+      {{ form.hidden_tag() }}
+
+      <div class="form-group">
+        {{ form.title.label(class_="form-label") }}
+        {{ form.title(class_="form-control", placeholder="Enter event title") }}
+      </div>
+
+      <div class="form-group">
+        {{ form.description.label(class_="form-label") }}
+        {{ form.description(class_="form-control form-textarea", placeholder="Describe the purpose and activities") }}
+      </div>
+
+      <div class="form-group">
+        {{ form.date.label(class_="form-label") }}
+        {{ form.date(class_="form-control") }}
+      </div>
+
+      <div class="form-group">
+        {{ form.location.label(class_="form-label") }}
+        {{ form.location(class_="form-control", placeholder="Enter event location") }}
+      </div>
+
+      <div class="text-center mt-2">
+        {{ form.submit(class_="btn btn-green w-80") }}
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- JavaScript Enhancements -->
+<script>
+  // Validate before submission
+  document.getElementById('createEventForm').addEventListener('submit', function(e) {
+    const title = document.querySelector('[name="title"]').value.trim();
+    const desc = document.querySelector('[name="description"]').value.trim();
+    const date = document.querySelector('[name="date"]').value.trim();
+    const location = document.querySelector('[name="location"]').value.trim();
+    if (!title || !desc || !date || !location) {
+      e.preventDefault();
+      alert("Please fill in all required fields before creating the event.");
+      return;
+    }
+    const btn = this.querySelector('.btn-green');
+    btn.textContent = 'Creating...';
+    btn.disabled = true;
+  });
+</script>
+{% endblock %}
+
+

@@ -1,0 +1,217 @@
+{% extends "loggedin_base.html" %}
+
+{% block title %}{{ event.title }} - Event Detail{% endblock %}
+
+{% block content %}
+<style>
+  /* Countdown Style */
+  .countdown-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+  }
+  .countdown-item {
+    text-align: center;
+    min-width: 60px;
+  }
+  .countdown-number {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #28a745; /* Green theme */
+  }
+  .countdown-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+    text-transform: uppercase;
+  }
+  .event-status-message {
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+  }
+</style>
+
+<div class="container">
+  <div class="card card-wide">
+    <h2 class="page-heading">{{ event.title }}</h2>
+
+    <div id="countdown-container"
+         data-date="{{ event.date.strftime('%Y-%m-%dT%H:%M:%S') }}">
+
+      <div class="countdown-wrapper">
+        <div class="countdown-item">
+          <span class="countdown-number" id="cd-days">00</span>
+          <span class="countdown-label">Days</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-number" id="cd-hours">00</span>
+          <span class="countdown-label">Hours</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-number" id="cd-minutes">00</span>
+          <span class="countdown-label">Mins</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-number" id="cd-seconds">00</span>
+          <span class="countdown-label">Secs</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="event-ended-message" class="event-status-message text-danger" style="display: none;">
+      ⚠️ This event has already started or ended.
+    </div>
+
+    <hr>
+
+    <p><b>Date:</b> {{ event.date.strftime('%Y-%m-%d') }}</p>
+
+    <p><b>Location:</b> {{ event.location }}</p>
+    <p><b>Description:</b> {{ event.description }}</p>
+
+    <hr>
+
+    {% if user_role == 'Volunteer' %}
+      {% if not already_joined %}
+        <form method="POST" action="{{ url_for('event_detail', event_id=event.id) }}">
+          {{ form.hidden_tag() }}
+          {{ form.submit(class_="btn btn-green w-80") }}
+        </form>
+      {% else %}
+        <p class="text-success text-center"><b>You have already joined this event.</b></p>
+        <a href="{{ url_for('feedback', event_id=event.id) }}" class="btn btn-dark w-80">Leave Feedback</a>
+      {% endif %}
+
+    {% elif user_role == 'Organizer' and event.organizer_id == session['USER_ID'] %}
+      <div class="text-center mt-1">
+        <a href="{{ url_for('edit_event', event_id=event.id) }}" class="btn btn-blue mr-1">Edit Event</a>
+        <a href="{{ url_for('view_participants', event_id=event.id) }}" class="btn btn-dark">View Participants</a>
+      </div>
+
+    {% elif user_role == 'Admin' %}
+      <div class="text-center mt-1">
+        <a href="{{ url_for('admin_edit_event', event_id=event.id) }}" class="btn btn-red mr-1">Admin Edit</a>
+        <a href="{{ url_for('admin_delete_event', event_id=event.id) }}" class="btn btn-light">Delete</a>
+      </div>
+
+    {% elif user_role == 'Visitor' %}
+      <p class="text-center text-muted mt-1">
+        You are viewing as a <b>Visitor</b>. Please
+        <a href="{{ url_for('login') }}" class="link-green">log in</a>
+        to join this event or leave feedback.
+      </p>
+    {% endif %}
+
+    <hr>
+
+    <h3 class="section-title">👥 Participants</h3>
+    <ul class="info-list">
+      {% for p in participants %}
+        <li>{{ p.user.username }} — {{ p.hours }} hours</li>
+      {% else %}
+        <li>No participants yet.</li>
+      {% endfor %}
+    </ul>
+
+    <h3 class="section-title mt-2">💬 Feedback</h3>
+    <div id="feedbackContainer">
+      <ul class="info-list">
+        {% for f in feedbacks %}
+          <li><b>{{ f.user.username }}</b>: {{ f.comment }} ({{ f.rating }}/5)</li>
+        {% else %}
+          <li>No feedback yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="text-center mt-2">
+      {% if session.get('ROLE') == 'Visitor' %}
+        <a href="{{ url_for('visitor_entry') }}" class="btn btn-green">← Back to Visitor Home</a>
+      {% else %}
+        <a href="{{ url_for('index') }}" class="btn btn-green">← Back to Home</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // button animation
+    const joinForm = document.querySelector('form');
+    if (joinForm) {
+      joinForm.addEventListener('submit', () => {
+        const btn = joinForm.querySelector('.btn-green');
+        if(btn) {
+            btn.textContent = 'Joining...';
+            btn.disabled = true;
+        }
+      });
+    }
+
+    // Comment Collapse
+    const fbTitle = document.querySelector('.section-title.mt-2');
+    const fbContainer = document.getElementById('feedbackContainer');
+    if(fbTitle && fbContainer) {
+        fbTitle.style.cursor = 'pointer';
+        fbTitle.title = 'Click to collapse/expand feedbacks';
+        fbTitle.addEventListener('click', () => {
+            fbContainer.style.display = fbContainer.style.display === 'none' ? 'block' : 'none';
+        });
+    }
+
+    // Countdown logic
+    const countdownContainer = document.getElementById('countdown-container');
+    const endedMessage = document.getElementById('event-ended-message');
+
+    if (!countdownContainer) return;
+
+    const eventDateStr = countdownContainer.dataset.date;
+
+    // Attempt to analyze the time
+    let eventTime = new Date(eventDateStr).getTime();
+
+    // Fault tolerance
+    if (isNaN(eventTime)) {
+        if (eventDateStr && eventDateStr.length === 10) {
+             eventTime = new Date(eventDateStr + "T00:00:00").getTime();
+        } else {
+             return;
+        }
+    }
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = eventTime - now;
+
+      if (distance < 0) {
+        countdownContainer.style.display = 'none';
+        if(endedMessage) endedMessage.style.display = 'block';
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+      document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('cd-minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('cd-seconds').textContent = String(seconds).padStart(2, '0');
+
+      countdownContainer.style.display = 'block';
+      if(endedMessage) endedMessage.style.display = 'none';
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  });
+</script>
+{% endblock %}

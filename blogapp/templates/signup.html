@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+{% block title %}Sign Up - Green Event Platform{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:500px;">
+  <div class="card">
+    <h2 class="section-title" style="text-align:center;">Create Your Account</h2>
+    <p style="text-align:center; color:var(--gray); margin-bottom:1.5rem;">
+      Join our volunteer community and make a difference 🌿
+    </p>
+
+    <form method="POST" action="" id="signupForm" novalidate>
+      {{ form.hidden_tag() }}
+
+      <!-- Username -->
+      <div class="form-group">
+        <label class="form-label">{{ form.username.label }}</label>
+        {{ form.username(class="form-control", required=True, placeholder="Enter your username") }}
+        <span class="error-text js-error" id="username-error"></span>
+        {% for error in form.username.errors %}
+          <span class="error-text">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label">{{ form.email.label }}</label>
+        {{ form.email(class="form-control", type="email", required=True, placeholder="Enter your email address") }}
+        <span class="error-text js-error" id="email-error"></span>
+        {% for error in form.email.errors %}
+          <span class="error-text">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label class="form-label">{{ form.password.label }}</label>
+        {{ form.password(class="form-control", required=True, minlength="6", placeholder="At least 6 characters") }}
+        <span class="error-text js-error" id="password-error"></span>
+        {% for error in form.password.errors %}
+          <span class="error-text">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <!-- Repeat Password -->
+      <div class="form-group">
+        <label class="form-label">{{ form.password2.label }}</label>
+        {{ form.password2(class="form-control", required=True, minlength="6", placeholder="Repeat your password") }}
+        <span class="error-text" id="password-match-error" style="display:none;">Passwords do not match.</span>
+        {% for error in form.password2.errors %}
+          <span class="error-text">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <!-- Role -->
+      <div class="form-group">
+        <label class="form-label">{{ form.role.label }}</label>
+        {{ form.role(class="form-control select-control", required=True) }}
+        <span class="error-text js-error" id="role-error"></span>
+        {% for error in form.role.errors %}
+          <span class="error-text">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <!-- Accept Rules -->
+      <div class="form-group" style="margin-top:1rem;">
+        <label style="display:flex; align-items:center; gap:6px;">
+          {{ form.accept_rules(required=True) }} {{ form.accept_rules.label }}
+        </label>
+        <span class="error-text js-error" id="rules-error"></span>
+        {% for error in form.accept_rules.errors %}
+          <span class="error-text">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <!-- Submit -->
+      <div style="text-align:center; margin-top:1.5rem;">
+        {{ form.submit(class="btn", style="width:100%;") }}
+      </div>
+    </form>
+
+    <p style="text-align:center; margin-top:1rem;">
+      Already have an account?
+      <a href="{{ url_for('login') }}" style="color:var(--green); font-weight:bold;">Login →</a>
+    </p>
+  </div>
+</div>
+
+<!-- ===============================================
+     JS: live validation + duplicate check + regex
+================================================= -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("signupForm");
+  const inputs = form.querySelectorAll(".form-control");
+  const pwd1 = form.querySelector("input[name='password']");
+  const pwd2 = form.querySelector("input[name='password2']");
+  const pwdError = document.getElementById("password-match-error");
+
+  // Email regex (fixed)
+  const emailRegex = /^[^@]+@[^@]+\.[A-Za-z]{2,}$/;
+
+  // ===============================
+  // Reusable helpers
+  // ===============================
+  function showError(input, message, id) {
+    input.classList.add("input-error");
+    input.classList.remove("input-valid");
+    if (id) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = message;
+    }
+  }
+
+  function clearError(input, id) {
+    input.classList.remove("input-error");
+    input.classList.add("input-valid");
+    if (id) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = "";
+    }
+  }
+
+  // ===============================
+  // Real-time duplicate check (AJAX)
+  // ===============================
+  async function checkDuplicate(field, value) {
+    const url = field === "username" ? "/check_username" : "/check_email";
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ [field]: value })
+    });
+    const data = await res.json();
+    return data.exists;
+  }
+
+  // ===============================
+  // Live validation
+  // ===============================
+  inputs.forEach(input => {
+    input.addEventListener("input", async () => {
+      const value = input.value.trim();
+      const name = input.name;
+
+      // Username validation
+      if (name === "username") {
+        if (value.length < 2) {
+          showError(input, "Username must be at least 2 characters.", "username-error");
+        } else {
+          const duplicate = await checkDuplicate("username", value);
+          if (duplicate) {
+            showError(input, "This username is already taken.", "username-error");
+          } else {
+            clearError(input, "username-error");
+          }
+        }
+      }
+
+      // Email validation
+      else if (name === "email") {
+        if (!emailRegex.test(value)) {
+          showError(input, "Please enter a valid email address.", "email-error");
+        } else {
+          const duplicate = await checkDuplicate("email", value);
+          if (duplicate) {
+            showError(input, "This email is already registered.", "email-error");
+          } else {
+            clearError(input, "email-error");
+          }
+        }
+      }
+
+      // Password length
+      else if (name === "password" && value.length < 6) {
+        showError(input, "Password must be at least 6 characters.", "password-error");
+      }
+
+      // Default clear for others
+      else {
+        clearError(input, `${name}-error`);
+      }
+    });
+  });
+
+  // ===============================
+  // Password match check
+  // ===============================
+  function checkPasswords() {
+    const p1 = pwd1.value.trim();
+    const p2 = pwd2.value.trim();
+
+    if (p1 && p2) {
+      if (p1 !== p2) {
+        pwd2.classList.add("input-error");
+        pwd2.classList.remove("input-valid");
+        pwdError.style.display = "inline";
+      } else {
+        pwd2.classList.add("input-valid");
+        pwd2.classList.remove("input-error");
+        pwdError.style.display = "none";
+      }
+    } else {
+      pwdError.style.display = "none";
+    }
+  }
+
+  pwd1.addEventListener("input", checkPasswords);
+  pwd2.addEventListener("input", checkPasswords);
+
+  // ===============================
+  // Final validation before submit
+  // ===============================
+  form.addEventListener("submit", (e) => {
+    let isValid = true;
+
+    // Username
+    const username = form.querySelector("input[name='username']");
+    if (username.value.trim() === "") {
+      showError(username, "Username is required.", "username-error");
+      isValid = false;
+    }
+
+    // Email
+    const email = form.querySelector("input[name='email']");
+    if (!emailRegex.test(email.value.trim())) {
+      showError(email, "Please enter a valid email address.", "email-error");
+      isValid = false;
+    }
+
+    // Password
+    if (pwd1.value.trim().length < 6) {
+      showError(pwd1, "Password must be at least 6 characters.", "password-error");
+      isValid = false;
+    }
+
+    // Password match
+    if (pwd1.value.trim() !== pwd2.value.trim()) {
+      pwd2.classList.add("input-error");
+      pwdError.style.display = "inline";
+      isValid = false;
+    }
+
+    // Role
+    const role = form.querySelector("select[name='role']");
+    if (role && !role.value) {
+      showError(role, "Please select a role.", "role-error");
+      isValid = false;
+    }
+
+    // Accept rules
+    const rules = form.querySelector("input[name='accept_rules']");
+    if (!rules.checked) {
+      document.getElementById("rules-error").textContent = "You must accept the site rules.";
+      isValid = false;
+    } else {
+      document.getElementById("rules-error").textContent = "";
+    }
+
+    // Prevent submission if invalid
+    if (!isValid) {
+      e.preventDefault();
+    }
+  });
+});
+</script>
+{% endblock %}

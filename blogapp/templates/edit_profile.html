@@ -1,0 +1,113 @@
+{% extends "loggedin_base.html" %}
+{% block title %}Edit Profile - Green Event Platform{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2 class="page-heading">✏️ Edit My Profile</h2>
+
+  <div class="card card-wide">
+    <form method="POST" enctype="multipart/form-data" class="form-styled" id="editProfileForm">
+      {{ form.hidden_tag() }}
+
+      <!-- Username -->
+      <div class="form-group">
+        {{ form.username.label(class_="form-label") }}
+        {{ form.username(class_="form-control") }}
+        {% for error in form.username.errors %}
+          <span class="error-text">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        {{ form.email.label(class_="form-label") }}
+        {{ form.email(class_="form-control") }}
+        {% for error in form.email.errors %}
+          <span class="error-text">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        {{ form.password.label(class_="form-label") }}
+        {{ form.password(class_="form-control") }}
+        <small class="text-muted">Leave blank if you do not want to change your password.</small>
+        {% for error in form.password.errors %}
+          <span class="error-text">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <!-- Date of Birth -->
+      <div class="form-group">
+        {{ form.dob.label(class_="form-label") }}
+        {{ form.dob(class_="form-control") }}
+      </div>
+
+      <!-- Gender -->
+      <div class="form-group">
+        {{ form.gender.label(class_="form-label") }}
+        {{ form.gender(class_="form-control") }}
+      </div>
+
+      <!-- Avatar Upload -->
+      <div class="form-group">
+        {{ form.avatar.label(class_="form-label") }}
+        {{ form.avatar(class_="form-control", id="avatarInput") }}
+        <small class="text-muted">Accepted formats: JPG, JPEG, PNG</small>
+        <div class="preview-wrapper mt-1">
+          <img id="avatarPreview" class="avatar-img" style="display:none;" alt="Preview">
+        </div>
+      </div>
+
+      <!-- CV Upload -->
+      <div class="form-group">
+        {{ form.cv.label(class_="form-label") }}
+        {{ form.cv(class_="form-control") }}
+        <small class="text-muted">Accepted format: PDF (optional)</small>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="text-center mt-2">
+        {{ form.submit(class_="btn btn-green w-80") }}
+      </div>
+    </form>
+
+    <div class="text-center mt-1">
+      <a href="{{ url_for('profile') }}" class="btn btn-dark">Back to Profile</a>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript Enhancement -->
+<script>
+  // Preview uploaded avatar immediately
+  document.getElementById('avatarInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const preview = document.getElementById('avatarPreview');
+    if (!file.type.startsWith('image/')) {
+      alert('Please select a valid image file (JPG, JPEG, PNG)');
+      event.target.value = '';
+      preview.style.display = 'none';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Simple form validation before submit
+  document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+    const username = document.querySelector('[name="username"]').value.trim();
+    const email = document.querySelector('[name="email"]').value.trim();
+    if (!username || !email) {
+      alert('Please fill out both username and email fields.');
+      e.preventDefault();
+    }
+  });
+</script>
+{% endblock %}
+

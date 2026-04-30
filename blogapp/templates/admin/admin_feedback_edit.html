@@ -1,0 +1,57 @@
+{% extends "loggedin_base.html" %}
+{% block title %}Edit Feedback{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- Header Section -->
+  <div class="card card-wide">
+    <h2 class="page-heading text-center">Edit Feedback #{{ feedback.id }}</h2>
+    <p class="text-gray text-center">
+      Event: <b>{{ feedback.event.title if feedback.event else 'N/A' }}</b> |
+      User: <b>{{ feedback.user.username if feedback.user else 'N/A' }}</b>
+    </p>
+  </div>
+
+  <!-- Edit Form -->
+  <form method="post" class="card mt-3" style="max-width:600px; margin:auto; padding:1.5rem;">
+    <div class="form-group mb-3">
+      <label for="rating" class="text-dark" style="display:block; margin-bottom:0.3rem;">Rating (1–5)</label>
+      <input type="number" name="rating" id="rating" min="1" max="5"
+             value="{{ feedback.rating }}" required
+             class="input-field"
+             style="padding:0.5rem; width:100%; border:1px solid #ccc; border-radius:6px;">
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="comment" class="text-dark" style="display:block; margin-bottom:0.3rem;">Comment</label>
+      <textarea name="comment" id="comment" rows="4" required
+                class="input-field"
+                style="padding:0.5rem; width:100%; border:1px solid #ccc; border-radius:6px;">{{ feedback.comment }}</textarea>
+    </div>
+
+    <div class="text-center mt-3">
+      <button type="submit" class="btn btn-blue w-50">Save Changes</button>
+      <a href="{{ url_for('admin_feedback') }}" class="btn btn-gray w-25">Cancel</a>
+    </div>
+  </form>
+
+  <!-- Back to Top -->
+  <div class="text-center mt-3">
+    <button id="scrollTopBtn" class="btn btn-dark w-50">↑ Back to Top</button>
+  </div>
+</div>
+
+<!-- JavaScript Enhancements -->
+<script>
+  // Smooth scroll to top
+  const btn = document.getElementById('scrollTopBtn');
+  if (btn) {
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  }
+
+  // Autofocus on the first input field
+  const ratingInput = document.getElementById('rating');
+  if (ratingInput) ratingInput.focus();
+</script>
+{% endblock %}

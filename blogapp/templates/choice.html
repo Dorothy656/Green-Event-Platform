@@ -1,0 +1,39 @@
+{% extends "loggedin_base.html" %}
+{% block title %}Dashboard - Green Event Platform{% endblock %}
+
+{% block content %}
+
+<div style="max-width: 700px; margin: auto; text-align: center; margin-top: 2rem;">
+
+    <div class="card">
+        <h2 style="color:#2c3e50;">Welcome, {{ user.username }}!</h2>
+        <p style="color:#555; margin-bottom:1.5rem;">
+            Choose what you want to do next on the Green Event Platform 🌏
+        </p>
+
+        <div class="grid-3" style="margin-top: 2rem;">
+            <div class="card" style="cursor:pointer;">
+                <div class="card-title">My Profile</div>
+                <p style="color:#777;">View or update your personal details and upload your volunteer CV.</p>
+                <a class="btn" href="{{ url_for('profile') }}">Go to Profile</a>
+            </div>
+
+            <div class="card" style="cursor:pointer;">
+                <div class="card-title">Browse Events</div>
+                <p style="color:#777;">Explore upcoming green events and join as a volunteer.</p>
+                <a class="btn" href="{{ url_for('index') }}">View Events</a>
+            </div>
+
+            {% if user.role == 'Organizer' %}
+            <div class="card" style="cursor:pointer;">
+                <div class="card-title">Create Event</div>
+                <p style="color:#777;">Organizers can create and manage eco-friendly events.</p>
+                <a class="btn" href="{{ url_for('create_event') }}">Create</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

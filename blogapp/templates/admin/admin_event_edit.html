@@ -1,0 +1,128 @@
+{% extends "loggedin_base.html" %}
+{% block title %}Manage Event{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- Header Section -->
+  <div class="card card-wide">
+    <h2 class="page-heading text-center">⚙️ Manage Event #{{ event.id }}</h2>
+    <p class="text-gray text-center">
+      Title: <b>{{ event.title }}</b> | 
+      Date: <b>{{ event.date.strftime('%Y-%m-%d') if event.date else 'N/A' }}</b> | 
+      Location: <b>{{ event.location or 'N/A' }}</b>
+    </p>
+  </div>
+
+  <!-- Edit Form -->
+  <form method="post" class="card mt-3" style="max-width:700px; margin:auto; padding:1.5rem;">
+
+    <!-- Organizer Field -->
+    <div class="form-group mb-3">
+      <label for="organizer" style="display:block; margin-bottom:0.3rem;">
+        Organizer (username, must have role = Organizer)
+      </label>
+      <input
+        type="text"
+        id="organizer"
+        name="organizer"
+        list="organizer-list"
+        value="{{ event.organizer.username if event.organizer else '' }}"
+        required
+        class="input-field"
+        style="padding:0.5rem; width:100%; border:1px solid #ccc; border-radius:6px;">
+      <datalist id="organizer-list">
+        {% for user in organizer_candidates %}
+          <option value="{{ user.username }}"></option>
+        {% endfor %}
+      </datalist>
+      <p class="text-gray" style="font-size:0.9rem;">
+        Only users with role “Organizer” can be selected as event organizer.
+      </p>
+    </div>
+
+    <!-- Participants Field -->
+    <div class="form-group mb-3">
+      <label for="participants" style="display:block; margin-bottom:0.3rem;">
+        Participants (comma-separated usernames)
+      </label>
+      <textarea
+        id="participants"
+        name="participants"
+        rows="3"
+        class="input-field"
+        style="padding:0.5rem; width:100%; border:1px solid #ccc; border-radius:6px;">{{ current_participants }}</textarea>
+      <p class="text-gray" style="font-size:0.9rem;">
+        Add or remove usernames separated by commas. Only existing users will be accepted.
+        <br><span id="participant-count" style="color:#007acc; font-weight:bold;">{{ current_participants.split(',')|length if current_participants else 0 }}</span> participants selected.
+      </p>
+
+      <!-- All users datalist for auto-completion -->
+      <datalist id="user-list">
+        {% for user in all_users %}
+          <option value="{{ user.username }}"></option>
+        {% endfor %}
+      </datalist>
+    </div>
+
+    <!-- Form Buttons -->
+    <div class="text-center mt-3">
+      <button type="submit" class="btn btn-blue w-50">Save Changes</button>
+      <a href="{{ url_for('admin_events') }}" class="btn btn-gray w-25">Cancel</a>
+    </div>
+  </form>
+
+  <!-- Back to Top -->
+  <div class="text-center mt-3">
+    <button id="scrollTopBtn" class="btn btn-dark w-50">↑ Back to Top</button>
+  </div>
+</div>
+
+<!-- JavaScript Enhancements -->
+<script>
+  // Smooth scroll to top
+  const btn = document.getElementById('scrollTopBtn');
+  if (btn) {
+    btn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // Autofocus on organizer input
+  const organizerInput = document.getElementById('organizer');
+  if (organizerInput) organizerInput.focus();
+
+  // Participant count auto update
+  const participantsInput = document.getElementById('participants');
+  const participantCount = document.getElementById('participant-count');
+  if (participantsInput && participantCount) {
+    participantsInput.addEventListener('input', () => {
+      const names = participantsInput.value.split(',')
+        .map(x => x.trim())
+        .filter(Boolean);
+      participantCount.textContent = names.length;
+    });
+  }
+
+  // Front-end validation on submit
+  document.querySelector("form").addEventListener("submit", function(e) {
+    const organizerVal = organizerInput.value.trim();
+    const validOrganizers = Array.from(document.querySelectorAll("#organizer-list option")).map(o => o.value);
+    if (!validOrganizers.includes(organizerVal)) {
+      alert("Invalid organizer username. Please select from Organizer list.");
+      e.preventDefault();
+      return;
+    }
+
+    const allUsers = Array.from(document.querySelectorAll("#user-list option")).map(o => o.value);
+    const participants = participantsInput.value.split(',').map(x => x.trim()).filter(Boolean);
+    for (let p of participants) {
+      if (!allUsers.includes(p)) {
+        alert(`Participant "${p}" does not exist.`);
+        e.preventDefault();
+        return;
+      }
+    }
+  });
+</script>
+{% endblock %}
